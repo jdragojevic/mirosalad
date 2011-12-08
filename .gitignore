@@ -1,0 +1,5 @@
+# ignore the .class and .pyc files
+*.class
+*.pyc
+
+
