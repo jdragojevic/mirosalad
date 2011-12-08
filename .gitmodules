@@ -1,0 +1,3 @@
+[submodule "lettuce"]
+	path = lettuce
+	url = git@github.com:PCF-qa/lettuce.git
