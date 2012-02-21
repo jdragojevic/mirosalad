@@ -9,14 +9,15 @@ import shutil
 from sikuli.Sikuli import *
 
 testlitmus = True
-proj_dir = os.path.join(os.getcwd(), 'features')
+proj_dir = os.getcwd()
 
 def get_img_path():
     """Set up the path to the os specific image directory and for setBundlePath().
 
     """
     img_dir = "Images_"+get_os_name()
-    img_path = os.path.join(proj_dir,img_dir)
+    img_path = os.path.join(proj_dir, 'features', 'terrain', img_dir)
+    print img_path
     return img_path
 
 def set_image_dirs():
@@ -29,7 +30,7 @@ def set_image_dirs():
     if os_image_dir not in list(getImagePath()):
         addImagePath(os_image_dir)
     #Add the sub-dir under Images to the sikuli search path if they are not there already
-    app_image_dir = os.path.join(proj_dir,"Images")
+    app_image_dir = os.path.join(proj_dir, 'features', 'terrain', "Images")
     for x in os.listdir(app_image_dir):
         dirx = os.path.join(app_image_dir,x)
         if dirx not in list(getImagePath()):
@@ -42,7 +43,7 @@ def miro_images():
 
 
     """
-    img_path = os.path.join(proj_dir,"Images")
+    img_path = os.path.join(proj_dir, 'features', 'terrain', "Images")
     return img_path
 
 def get_os_name():
@@ -215,11 +216,11 @@ def delete_miro_downloaded_files():
         else:
             print "***Warning: didn't find videos dir***"
 
-def get_val_from_mirodb(dbtable,dbfield):
+def get_val_from_mirodb(dbtable, dbfield):
     stmt = 'from db_mod import MiroDatabase; MiroDatabase().get_value("%s","%s")' % (dbtable,dbfield)    
     db_cmd = ['python','-c',stmt]
     p = subprocess.Popen(db_cmd).communicate()
-    infile = os.path.join(proj_dir, "dbval.pkl")
+    infile = os.path.join(os.getenv("TMPDIR"), "dbval.pkl")
     pkl_file = open(infile, 'rb')
     dbvalue = pickle.load(pkl_file)
     pkl_file.close()

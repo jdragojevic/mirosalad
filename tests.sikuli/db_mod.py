@@ -4,8 +4,8 @@ import sqlite3
 import pickle
 
 
-
 class MiroDatabase():
+
     """Connect to the miro database and set or retrieve values.
 
     """
@@ -34,7 +34,8 @@ class MiroDatabase():
         c.execute(stmt)
         myval = c.fetchone()[0]
         conn.close()
-        ofile = os.path.join(os.getenv("PCF_TEST_HOME"),"Miro","dbval.pkl")
+        ofile = os.path.join(os.getenv("TMPDIR"), "dbval.pkl")
+        print ofile
         output = open(ofile, 'wb')
         pickle.dump(str(myval), output)
         output.close()

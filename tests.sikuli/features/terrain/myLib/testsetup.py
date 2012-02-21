@@ -33,21 +33,16 @@ def launch_miro():
         App.open(launch_cmd())
     time.sleep(10)
 
-   
+
 def get_regions():
         config.set_image_dirs()
-        myscreen = Screen()
-        pr = Region(myscreen.getBounds())
-
-        pr.setY(10)
-        sidebar_width = 250
-#        sidebar_width = int(config.get_val_from_mirodb("global_state","tabs_width"))
-        topx = 50
-        topy = 30
-        if pr.exists("Music",5):
-            click(pr.getLastMatch())
-            topx =  int(pr.getLastMatch().getX())-55
-            topy = int(pr.getLastMatch().getY())-80
+        click(Pattern("sidebar_top.png").similar(0.6))
+        topx =  int(getLastMatch().getX())-15
+        topy = int(getLastMatch().getY())-40
+        try:
+            sidebar_width = int(config.get_val_from_mirodb("global_state","tabs_width"))
+        except:
+            sidebar_width = 250
         sidex = sidebar_width+topx    
         find("BottomCorner.png")
         vbarx =  int(getLastMatch().getX())+30
@@ -57,15 +52,16 @@ def get_regions():
         mainwidth = int((vbarx-sidex)+vbarw)
         
 
-        AppRegions = {"SidebarRegion": Region(topx,topy,sidebar_width,app_height),
-                      "MainViewRegion": Region(sidex,topy+70,mainwidth,app_height),
+        AppRegions = {"SidebarRegion": Region(topx,topy, sidebar_width, app_height),
+                      "MainViewRegion": Region(sidex, topy+70, mainwidth, app_height),
                       "TopHalfRegion": Region(0,0,mainwidth+sidebar_width,app_height/2),
                       "TopLeftRegion": Region(0,0,mainwidth/2,app_height/2),
-                      "MainTitleBarRegion": Region(sidex,topy,mainwidth,120),
-                      "MainAndHeaderRegion": Region(sidex,topy+130,sidebar_width,app_height+50),
+                      "MainTitleBarRegion": Region(sidex, topy, mainwidth, 120),
+                      "MainAndHeaderRegion": Region(sidex, topy, mainwidth, app_height+50),
+                      "PodcastLowerRegion": Region(sidex, vbary - 80, mainwidth, 70)
                       }
         for regs in AppRegions.itervalues():
             regs.setAutoWaitTimeout(30)
-##        for regs in AppRegions.itervalues():
-##            regs.highlight(1)
+            regs.highlight(2)
         return AppRegions    
+   

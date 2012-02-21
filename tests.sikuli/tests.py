@@ -1,20 +1,10 @@
 import os
 import sys
 from sikuli.Sikuli import *
-sys.path.append(os.path.join(os.getcwd(), lettuce))
+os.chdir(os.path.join(os.getcwd(), 'tests.sikuli'))
+sys.path.append(os.getcwd())
+sys.path.append(os.path.join(os.getcwd(), 'lettuce'))
+sys.path.append(os.path.join(os.getcwd(), 'features', 'terrain', 'myLib'))
 import lettuce
-newdir = os.path.join(os.getcwd(), 'tests.sikuli')
-os.chdir(newdir)
 lettuce.lettuce_cli.main()
-
-
-
-    
-    
-
-
-
-
-
-
 

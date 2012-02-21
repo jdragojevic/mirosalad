@@ -21,6 +21,13 @@ class MiroApp(object):
         self.os_name = config.get_os_name()
         self.SYS_TEXT_ENTRY_BUTTON = Pattern('type_a_filename.png')
         self.OPTION_EXPAND = Pattern("prefs_expand_option.png")
+        AppRegion = MiroRegions()
+        self.s = AppRegion.s
+        self.sidebar_width = self.s.getW()
+        self.m = AppRegion.m
+        self.mtb = AppRegion.mtb
+        self.t = AppRegion.t
+        self.mr = AppRegion.mr
 
 
     def screen_region(self):
@@ -422,7 +429,6 @@ class MiroApp(object):
         """
         print "Clicking the podcast: %s" % feed
         p = self.get_podcasts_region(reg)
-        p.highlight(2)
         p.click(feed)
         return Region(p.getLastMatch()).getCenter()
 
