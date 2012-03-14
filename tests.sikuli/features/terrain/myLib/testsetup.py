@@ -62,6 +62,5 @@ def get_regions():
                       }
         for regs in AppRegions.itervalues():
             regs.setAutoWaitTimeout(30)
-            regs.highlight(2)
         return AppRegions    
    

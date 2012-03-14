@@ -115,7 +115,7 @@ def replace_database(db):
     shutil.copy(db, dbfile)
 
 def reset_preferences():
-    datadir = os.path.join(proj_dir,"TestData","databases")
+    datadir = os.path.join(proj_dir, "features", "terrain", "TestData","databases")
     if get_os_name() == "lin":
         preffile = os.path.join(datadir,"linux_prefs")
         reset_cmd = ["gconftool-2", "--load", preffile]
@@ -183,7 +183,7 @@ def delete_database_and_prefs(dbonly=False):
 def set_def_db_and_prefs():
     print "resetting db to empty db"
     time.sleep(5)
-    db = os.path.join(proj_dir, "TestData", "databases", "empty_db")
+    db = os.path.join(proj_dir, "features", "terrain", "TestData", "databases", "empty_db")
     replace_database(db)
     reset_preferences()
     time.sleep(5)

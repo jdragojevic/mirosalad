@@ -3,7 +3,7 @@
 from lettuce import world 
 from sikuli.Sikuli import *
 from miro_app import MiroApp
-import yaml
+
 
 class MainView(MiroApp):
   
@@ -55,23 +55,18 @@ class MainView(MiroApp):
         else:
             keyUp(Key.CTRL)
  
-    def set_podcast_autodownload(self, reg, setting="Off"):
+    def podcast_autodownload(self, setting="Off"):
         """Set the feed autodownload setting using the button at the bottom of the mainview.
 
         """
-        """Based on the position of the Playlists tab, click on the last podcast in the list.
-
-        This is useful if the title isn't displayed completely or you have other chars to don't work for text recognition.
-        """
-        
-        b = Region(reg.m.getX(),reg.m.getY()+500,reg.m.getW(), reg.m.getH())
-        b.highlight(2)
-        b.find("button_autodownload.png")
+        b = Region(self.m)
+        b.setY(b.getY()+500)
+        b.find(self._BUTTONS["Autodownload"])
         b1 = Region(b.getLastMatch().right(80))
         b1.highlight(2)
         for x in range(0,3):
             if not b1.exists(setting,2):
-                   b.click("button_autodownload.png")
+                   b.click(self._BUTTONS["Autodownload"])
                    time.sleep(2)
 
     def open_podcast_settings(self, reg):
@@ -100,19 +95,19 @@ class MainView(MiroApp):
         time.sleep(2)
         p1.click("button_done.png")
     
-    def delete_items(self, reg, title, item_type):
+    def delete_items(self, title, item_type):
         """Remove video audio music other items from the library.
 
         """
         type(Key.ESC)
-        self.click_sidebar_tab(reg, item_type)
-        self.tab_search(reg, title)
-        if reg.m.exists(title,10):
-            click(reg.m.getLastMatch())
+        world.click_library_tab(item_type)
+        self.tab_search(title)
+        if self.m.exists(title,10):
+            click(self.m.getLastMatch())
             type(Key.DELETE)
-            self.remove_confirm(reg, "delete_item")
+            self.remove_confirm("delete_item")
 
-    def delete_current_selection(self, reg):
+    def delete_current_selection(self):
         """Wherever you are, remove what is currently selected.
 
         """
@@ -121,19 +116,19 @@ class MainView(MiroApp):
 
 
   
-    def tab_search(self, reg, title, confirm_present=False):
+    def tab_search(self, title, confirm_present=False):
         """enter text in the search box.
 
         """
         print "searching within tab"
         time.sleep(3)
-        if reg.mtb.exists("tabsearch_clear.png",5):
+        if self.mtb.exists(self._SEARCH["clear"] ,5):
             print "found tabsearch_clear"
-            click(reg.mtb.getLastMatch())
-            click(reg.mtb.getLastMatch().left(10))
-        elif reg.mtb.exists("tabsearch_inactive.png",5):
+            click(self.mtb.getLastMatch())
+            click(self.mtb.getLastMatch().left(10))
+        elif self.mtb.exists(self._SEARCH["inactive"] ,5):
             print "found tabsearch_inactive"
-            reg.mtb.click("tabsearch_inactive.png")
+            self.mtb.click(self._SEARCH["inactive"])
         else:
             print "can not find the search box"
         time.sleep(2)
@@ -141,38 +136,37 @@ class MainView(MiroApp):
         type(title.upper())
         time.sleep(3)
         if confirm_present != False:
-            self.toggle_normal(reg)
-            if reg.m.exists(title, 5):
+            self.toggle_normal()
+            if self.m.exists(title, 5):
                 present=True
-            elif reg.m.exists(Pattern("item-context-button.png")):
+            elif self.m.exists(Pattern("item-context-button.png")):
                 present=True
             else:
                 print("Item %s not found in the tab" % title)
             return present
 
-    def clear_search(self, reg):
-        if reg.mtb.exists("tabsearch_clear.png",5):
+    def clear_search(self):
+        if self.mtb.exists(self._SEARCH["clear"] ,5):
             print "found tabsearch_clear"
-            click(reg.mtb.getLastMatch())
+            click(self.mtb.getLastMatch())
         
-
 
     def expand_item_details(self, reg):
-        if reg.m.exists(Pattern("item_expand_details.png").exact()):
-            click(reg.m.getLastMatch())
+        if self.m.exists(Pattern("item_expand_details.png").exact()):
+            click(self.m.getLastMatch())
         
         
-    def toggle_normal(self, reg):
+    def toggle_normal(self):
         """toggle to the normal view.
 
         """
         print "toggling to normal view"
         # Find the search box to set the area.
         
-        if reg.mtb.exists("tabsearch_clear.png",5): # this should always be found on gtk
-            treg = Region(reg.mtb.getLastMatch().left(350))
-        elif reg.mtb.exists("tabsearch_inactive.png",5):
-            treg = Region(reg.mtb.getLastMatch().left(350))
+        if self.mtb.exists(self._SEARCH["clear"], 5): # this should always be found on gtk
+            treg = Region(self.mtb.getLastMatch().left(350))
+        elif self.mtb.exists(self._SEARCH['inactive'] ,5):
+            treg = Region(self.mtb.getLastMatch().left(350))
         treg.setH(treg.getH()+14)
         treg.setY(treg.getY()-8)
 
@@ -181,16 +175,15 @@ class MainView(MiroApp):
             click(treg.getLastMatch())
      
 
-    def toggle_list(self, reg):
+    def toggle_list(self):
         """toggle to the list view.
 
         """
         print "toggling to list view"
         # Find the search box to set the area.
-        
-        if reg.mtb.exists("tabsearch_clear.png",5): # this should always be found on gtk
-            treg = Region(reg.mtb.getLastMatch().left(350))
-        elif reg.mtb.exists("tabsearch_inactive.png",5):
+        if self.mtb.exists(self._SEARCH["clear"], 5): # this should always be found on gtk
+            treg = Region(self.mtb.getLastMatch().left(350))
+        elif self.mtb.exists(self._SEARCH['inactive'] ,5):
             treg = Region(reg.mtb.getLastMatch().left(350))
         treg.setH(treg.getH()+14)
         treg.setY(treg.getY()-8)
@@ -251,38 +244,20 @@ class MainView(MiroApp):
 
 
       
-    def confirm_download_started(self, reg,title):
-        """Verifies file download started.
+    def confirm_download_started(self, reg, title):
+        """Tries to verify the file download started.
 
         Handles and already download(ed / ing) messages
         """
-        print "in function confirm dl started"
-        time.sleep(2)
-        mr = Region(reg.mtb.above(50).below())
-        if mr.exists("been downloaded",3) or \
-           mr.exists("message_already_downloaded.png",1):
-            downloaded = "downloaded"
-            print "item already downloaded"
-            type(Key.ESC)            
-        elif mr.exists("downloading now",3) or \
-             mr.exists("message_already_external_dl.png",1):
-            downloaded = "in_progress"
-            print "item downloading"
-            type(Key.ESC)
-        elif mr.exists("Error",3) or \
-             mr.exists(Pattern("badge_dl_error.png"),1):
-            downloaded = "failed"
-            type(Key.ESC)
-        else:
-            self.click_sidebar_tab(reg, "Downloading")
-            reg.mtb.click(Pattern("download-pause.png"))
-            if mr.exists(Pattern("badge_dl_error.png"),2):
+        dl_status = world.dialogs.download_dialogs()
+        if dl_status == 'undetermined'
+            world.click_library_tab("Downloading")
+            if self.m.exists(Pattern("badge_dl_error.png"),2):
                 downlaoded = "errors"
             elif self.tab_search(reg,title,confirm_present=True) == True:
                 downloaded = "in_progress"
             else:
-                    downloaded = "item not located"
-            reg.mtb.click(Pattern("download-resume.png"))
+                downloaded = "item not located"
         return downloaded
 
 
@@ -309,7 +284,7 @@ class MainView(MiroApp):
         Click off downloads tab and confirm tab disappears.
         
         """
-        self.click_sidebar_tab(reg, "Music")
+        world.click_library_tab("Music")
         time.sleep(2)
         if reg.s.exists("Downloading",2):
             click(reg.s.getLastMatch())
@@ -324,13 +299,12 @@ class MainView(MiroApp):
                 for x in mm:
                     click(x)    
                     
-    def wait_for_item_in_tab(self, reg, tab, item):
-        self.click_sidebar_tab(reg, tab)
-        self.tab_search(reg, item)
-        self.toggle_normal(reg)
+    def wait_for_item_in_tab(self, item):
+        self.tab_search(item)
+        self.toggle_normal()
         for x in range(0,30):
-            if not reg.m.exists(item):
-                print ". waiting",x*5,"seconds for item to appear in tab:",tab
+            if not self.m.exists(item, 1):
+                print ". waiting",x*5,"seconds for %s to appear" %item
                 time.sleep(5)
         
     def wait_conversions_complete(self, reg, title, conv):
@@ -372,9 +346,18 @@ class MainView(MiroApp):
             if not(i.exists(v,3)):
                 print("expected metadata not found")
 
-    def verify_audio_playback(self, reg, title):
-        self.toggle_normal(reg)
-        if reg.m.exists("item_currently_playing.png"):
+    def verify_video_playback(self, title):
+        playback = False
+        self.m.doubleClick(title)
+        if exists(Pattern("playback_bar_video.png"), 5):
+            playback = True
+            self.shortcut("d")
+            waitVanish(Pattern("playback_bar_video.png"),20)
+        return playback
+        
+
+    def verify_audio_playback(self, title):
+        if self.m.exists("item_currently_playing.png"):
             playback = True
         else:
             playback = False

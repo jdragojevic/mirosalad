@@ -35,7 +35,6 @@ class MiroDatabase():
         myval = c.fetchone()[0]
         conn.close()
         ofile = os.path.join(os.getenv("TMPDIR"), "dbval.pkl")
-        print ofile
         output = open(ofile, 'wb')
         pickle.dump(str(myval), output)
         output.close()

@@ -7,7 +7,7 @@ from miro_app import MiroApp
 
 class SidebarTab(MiroApp):
     _FIXED_LIB_TABS_IMG = "sidebar_top.png"
-    _FIXED_TABS = ["Miro", "Video", "Music"]
+    _FIXED_TABS = ["Miro", "Videos", "Music"]
     _MOVEABLE_TABS = ["Misc", "Downloading", "Converting", "Search", "Connect"]
     _EXPANDABLE_TABS = ["Sources", "Stores", "Podcasts", "Playlists"] #in order from top to bottom  
 
@@ -46,11 +46,12 @@ class SidebarTab(MiroApp):
             height = self.s.getH()
         else:
             self.s.find(self._EXPANDABLE_TABS[self._EXPANDABLE_TABS.index(tab)+1])
-            height = Region(self.s.getLastMatch()).getH()
+            height = Region(self.s.getLastMatch()).getY() - tab_rg.getY()
         width = self.s.getW()
                          
         tab_region = Region(topx, topy, width, height)
         tab_region.setAutoWaitTimeout(20)
+        tab_region.highlight(2)
         return tab_region
 
     def find_library_tab(self, tab):
@@ -58,17 +59,20 @@ class SidebarTab(MiroApp):
 
         """
         if tab in self._FIXED_TABS:
-            m = self._fixed_library_region()
+            tabloc = self._fixed_library_region()
         elif tab in self._MOVEABLE_TABS:
-            m = self._moveable_library_region() 
+            tabloc = self._moveable_library_region()
+        elif tab in self._EXPANDABLE_TABS:
+            tabloc = self._expandable_tab_region(tab) 
         else:
             print "%s is an unrecognized library tab" % tab
-        if m.exists(tab, 2):
-            return Region(m.getLastMatch())
+        click(Pattern(self._FIXED_LIB_TABS_IMG).similar(0.5))
+        if tabloc.exists(tab, 2):
+            return Region(tabloc.getLastMatch())
         else:  
             type(Key.DOWN)
-            m.find(tab)
-            return Region(m.getLastMatch())
+            tabloc.find(tab)
+            return Region(tabloc.getLastMatch())
 
 
     def click_library_tab(self, tab):
@@ -95,5 +99,18 @@ class SidebarTab(MiroApp):
         store_region = self._expandable_tab_region("Store")
         store_region.click(store)
         return Region(store_region.getLastMatch())
+
+    def add_feed(self, url, feed):
+        """Add a feed to miro, click on it in the sidebar.
+        
+        """
+        print "Adding the podcast: %s" % url
+        self.t.click("Sidebar")
+        self.shortcut('n')
+        time.sleep(2)
+        type(url + "\n")
+        time.sleep(10) #give it 10 seconds to add and update the feed
+        self.click_podcast(feed)
+        time.sleep(3)
 
 

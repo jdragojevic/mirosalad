@@ -370,21 +370,7 @@ class MiroApp(object):
         else:
             print "site not present: ",site
 
-    def add_feed(self, reg, url, feed):
-        """Add a feed to miro, click on it in the sidebar.
-        
-        Verify the feed is added by clicking on the feed and verify the feed name is present
-        in the main title bar.
-        """
-        print "Adding the podcast: %s" % url
-        reg.t.click("Sidebar")
-        self.shortcut('n')
-#        reg.t.click("Add Podcast")
-        time.sleep(2)
-        type(url + "\n")
-        time.sleep(10) #give it 10 seconds to add the feed
-        self.click_podcast(reg, feed)
-        time.sleep(3)
+
 
     def add_playlist(self, reg, playlist, style="menu"):
         """Add a playlist miro using 1 of the following styles:
@@ -612,46 +598,6 @@ class MiroApp(object):
         type(Key.DELETE)
         self.remove_confirm(reg, "remove")
 
-
-    def click_sidebar_tab(self, reg, tab):
-        """Click any default tab in the sidebar.
-
-        assumes the tab image file is an os-speicific image, and then verifies
-        the tab is selected by verifying the miro large icon in the main view
-
-        """
-        similar_tabs = ["Music","Misc","Miro","Videos"]
-                         #including Videos so it's not mixed with the video search
-        if reg.s.exists("Search",0):
-            print "found Search"
-            reg.s.click("Search")
-            active_tab = "search"
-        elif reg.s.exists("Connect"):     
-            print "found connect"
-            reg.s.click("Connect")
-            active_tab = "connect"
-        time.sleep(2)
-        tab = tab.capitalize()
-        if tab.capitalize() in similar_tabs:
-            print "going to tab: ",tab
-            boty = reg.s.getLastMatch().getY()
-            myr = Region(reg.s)
-            myr.setH(boty - reg.s.getY()) #height is top of sidebar to y position of video search
-            if tab == "Misc": #drop the height to avoid Miro tab
-                myr.find("Videos")
-                mry1 = Region(myr.getLastMatch().below(250))
-                mry1.click("Misc")
-            elif tab == "Miro":
-                myr.find("Music")
-                mry1 = Region(myr.getLastMatch().above(100))
-                mry1.click("Miro")
-            else:
-                myr.click(tab)
-                    
-        elif tab.lower() == "search" and active_tab == "search":
-            print "should be on search already"
-        else:
-            reg.s.click(tab)
 
     def tab_search(self, reg, title, confirm_present=False):
         """enter text in the search box.

@@ -1,5 +1,7 @@
 #!/usr/bin/python
 from lettuce import *
+import os
+
 
 @step('I am on the "(.*?)" sidebar tab')
 def display_library_tab(self, tab):
@@ -21,4 +23,5 @@ def display_playlist(self, playlist):
 @step('I am on the "(.*?)" store')
 def display_store(self, store):
     world.sidebar.click_store(store)
+
 
