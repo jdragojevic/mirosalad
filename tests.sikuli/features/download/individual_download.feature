@@ -3,7 +3,7 @@ Feature: Download videos by url
     I want to download files
     So that I can view, play and store them
 
-    Scenario: Download files from urls that Miro can recognize 
+    Scenario Outline: Download files from urls that Miro can recognize 
         When I download the item "<url>" 
         Then I have "<title>" in the "<item kind>" tab
             And I can verify the video "<title>" is playable

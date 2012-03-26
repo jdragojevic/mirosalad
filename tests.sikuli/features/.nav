@@ -1,0 +1,18 @@
+- installing:
+- interface:
+  - hybrid filter.feature
+- podcasts:
+- download:
+  - individual_download.feature
+- watchedfolders:
+- organizing:
+  - change_type.feature
+- playback:
+- playlists:
+- search:
+  - search.feature
+- converting:
+- devices:
+- sharing:
+- help:
+- trouble:

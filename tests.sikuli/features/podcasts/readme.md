@@ -93,14 +93,14 @@ to do this.
 When browsing the Miro Guide in Miro, you can subscribe to a feed by
 clicking on a "ADD FEED TO YOUR SIDEBAR" button:
 
-![image](../_static/podcasts_miro_guide.png)
+![image](http://manual.getmiro.com/_images/podcasts_miro_guide.png)
 ### Subscribing to a podcast through websites
 
 Some websites have a "Miro" link or a "subscribe with Miro" link that
 when clicked on will subscribe the feed in Miro. Here are a bunch of
 examples:
 
-![image](../_static/podcasts_web_site.png)
+![image](http://manual.getmiro.com/_images/podcasts_web_site.png)
 ### Subscribing to a podcast by entering in the url
 
 Many podcasts have a website and on the website is a url for the feed
@@ -241,4 +241,6 @@ Configuring podcast settings
 ----------------------------
 
 Configuring podcast settings is covered in
+[configuring podcast settings](../configuring#configuring-podcast-settings)
+
 :ref:\`configuring-podcast-settings\`.

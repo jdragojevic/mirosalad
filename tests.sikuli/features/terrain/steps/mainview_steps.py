@@ -9,9 +9,13 @@ def main_view_has_items(self, item_text, view):
 
 @step('I (see|click) the "(.*?)" button')
 def find_or_click_mainview_button(self, action, button):
-    loc = world.mainview.locate(button)
-    if action == 'click':
-        loc.click()
+    """Verify the existance or click a button in mainivew.
+
+    Take the name of any button in the mainview ui, set to lower and replace spaces with '_'
+    and that should be a method in the mainview class.
+    """
+    button_method = button.lower().replace(' ', '_')
+    getattr(world.mainview, button_method)(action)
 
 @step('I enter a search for "(.*?)" using the search engine "(.*?)"')
 def search_engine_search(self, term, engine):
@@ -24,8 +28,11 @@ def wait_for_item_in_tab(self, item, tab):
 
 @step('I set the feed "(.*?)" setting to "(.*?)"')
 def set_podcast_preference(self, setting, value):
-    feed_setting = "podcast_"+setting.lower()
-    getattr(world.mainview, feed_setting)(value)
+    if setting == 'Autodownload':
+        world.mainview.set_podcast_autodownload(value)
+    else:
+        getattr(world.mainview, 'settings')
+        world.dialog.change_podcast_settings(setting, value)
 
 @step('I can verify the video "([^"]*)" is playable')
 def verify_video_playback(self, title):

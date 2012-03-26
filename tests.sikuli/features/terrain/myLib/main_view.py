@@ -20,14 +20,32 @@ class MainView(MiroApp):
     _BUTTONS = {'Autodownload': 'button_autodownload.png', 
                 'Remove Podcast': 'button_remove_podcast.png',
                 'Settings': 'button_settings.png',
-                'Save as Podcast': 'button_save_as_podcast.png'}
+                'Save as Podcast': 'button_save_as_podcast.png',
+                'Save as Playlist': 'button_save_as_playlist.png'}
+
                 
     _SEARCH = {'clear': 'tabsearch_clear.png',
                'inactive': 'tabsearch_inactive.png'}
-
-    def locate_image(self):
-        pass
          
+    def settings(self, action):
+        self.m.find(self._BUTTONS['Settings'])
+        if action == 'click':
+            click(self.m.getLastMatch())
+
+    def save_as_a_podcast(self, action):
+        self.m.find(self._BUTTONS["Save as Podcast"])
+        if action == 'click':
+            click(self.m.getLastMatch())
+
+    def autodownload(self, action):
+        self.m.find(self._BUTTONS["Autodownload"])
+        if action == 'click':
+            click(self.m.getLastMatch())
+
+    def save_as_a_playlist(self, action):
+        self.m.find(self._BUTTONS["Save as Playlist"])
+        if action == 'click':
+            click(self.m.getLastMatch())
 
     def multi_select(self,region,item_list):
         """Use the CTRL or CMD key as os appropriate to select items in a region.
@@ -55,7 +73,7 @@ class MainView(MiroApp):
         else:
             keyUp(Key.CTRL)
  
-    def podcast_autodownload(self, setting="Off"):
+    def set_podcast_autodownload(self, setting="Off"):
         """Set the feed autodownload setting using the button at the bottom of the mainview.
 
         """
@@ -69,50 +87,29 @@ class MainView(MiroApp):
                    b.click(self._BUTTONS["Autodownload"])
                    time.sleep(2)
 
-    def open_podcast_settings(self, reg):
-        b = Region(reg.s.getX(),reg.m.getY()*2,reg.m.getW(), reg.m.getH())
-        b.find(Pattern("button_settings.png"))
-        click(b.getLastMatch())
+    def set_podcast_settings(self, setting):
+        self.settings("click")
+        world.dialog.change_podcast_settings(setting)
 
-    def click_remove_podcast(self, reg):
-        reg.m.click(Pattern("button_remove_podcast.png"))
-
-    def change_podcast_settings(self, reg, option, setting):
-        find("Expire Items")
-        p1 = Region(getLastMatch().nearby(800))
-        p1.find(option)
-        click(p1.getLastMatch().right(100))
-        if not p1.exists(setting):
-            type(Key.PAGE_DOWN)
-        if not p1.exists(setting):
-            type(Key.PAGE_UP)
-        if setting == "Keep 0":
-            type(Key.DOWN)
-            time.sleep(1)
-            type(Key.ENTER)
-        else:
-            p1.click(setting)
-        time.sleep(2)
-        p1.click("button_done.png")
     
     def delete_items(self, title, item_type):
         """Remove video audio music other items from the library.
 
         """
         type(Key.ESC)
-        world.click_library_tab(item_type)
+        world.sidebar.click_library_tab(item_type)
         self.tab_search(title)
         if self.m.exists(title,10):
             click(self.m.getLastMatch())
             type(Key.DELETE)
-            self.remove_confirm("delete_item")
+            world.dialog.remove_confirm("delete_item")
 
     def delete_current_selection(self):
         """Wherever you are, remove what is currently selected.
 
         """
         type(Key.DELETE)
-        self.remove_confirm(reg, "remove")
+        self.remove_confirm("remove")
 
 
   
@@ -250,7 +247,7 @@ class MainView(MiroApp):
         Handles and already download(ed / ing) messages
         """
         dl_status = world.dialogs.download_dialogs()
-        if dl_status == 'undetermined'
+        if dl_status == 'undetermined':
             world.click_library_tab("Downloading")
             if self.m.exists(Pattern("badge_dl_error.png"),2):
                 downlaoded = "errors"
@@ -306,6 +303,8 @@ class MainView(MiroApp):
             if not self.m.exists(item, 1):
                 print ". waiting",x*5,"seconds for %s to appear" %item
                 time.sleep(5)
+            else:
+                self.m.click(item)
         
     def wait_conversions_complete(self, reg, title, conv):
         """Waits for a conversion to complete.

@@ -1,4 +1,5 @@
-Feature: Hybrid view is only available on the tabs where it makes sense to display grouped items.
+Feature: Hybrid view filter
+ - Hybrid view filter is only available on the tabs where it makes sense to display grouped items.  For Music tabs it groups by Album, for Video displays it groups by series (generic term for Show name, podcast and last folder).
  - Sidebar tabs that have a hybrid view option:
   - Videos
   - Music

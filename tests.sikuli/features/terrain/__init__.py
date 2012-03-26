@@ -27,7 +27,7 @@ def setup_basic_data(feature):
     feature.name,
     feature.described_at.file
     )
-    if feature.name == "Edit Item Type":
+    if feature.name == "Edit Item Metadata":
         print "settting up some test data"
         # Add a feed that contains 1 of each item type (Music, Video, Misc) and set autodownload to All
         feed_path = os.path.join(os.getcwd(), 'features', 'terrain', 'TestData', 'feeds', "MixedCats.xml")

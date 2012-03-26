@@ -260,98 +260,8 @@ class MiroApp(object):
         if exists("sys_open_alert.png",30):
             click("sys_ok_button.png")
 
-    def remove_confirm(self, reg, action="remove"):
-        """If the remove confirmation is displayed, remove or cancel.
 
-        action = (remove_feed, remove_item or cancel)
-        m = Mainview region from testcase
-        need to add remove_library option
-        """
-        time.sleep(3)       
-        if reg.m.exists("Remove",3) or \
-           reg.t.exists("Are you",3) or \
-           reg.t.exists("One of",3) or \
-           reg.m.exists(Pattern("dialog_are_you_sure.png"),3) or \
-           reg.m.exists(Pattern("dialog_one_of_these.png"),3) or \
-           reg.t.exists("Cancel",3)or \
-           reg.t.exists(Pattern("dialog_are_you_sure.png"),3) or \
-           reg.t.exists(Pattern("dialog_one_of_these.png"),3):
-            
-            print "got confirmation dialog"
-            if action == "remove":
-                print "clicking remove button"
-                type(Key.ENTER)
-            elif action == "delete_item":
-                print "clicking delete button"
-                if config.get_os_name() == "osx":
-                    reg.t.click("button_delete_file.png")
-                else:
-                    reg.m.click("Delete File")
-            elif action == "cancel":
-                print "clicking cancel"
-                type(Key.ESC)
-            elif action == "keep":
-                print "keeping"
-                reg.m.click("Keep")
-                type(Key.ENTER)
-            else:
-                print "not sure what to do in this dialog"
         
-    def get_sources_region(self, reg):
-        """takes the main and sidebar regions to create a region for the websites section.
-        
-        """
-        if not reg.s.exists("Sources",1):
-            reg.s.click("Music")
-            time.sleep(1)
-        reg.s.click("Sources")
-        time.sleep(2)
-        topx =  reg.s.getX()-10
-        topy =  reg.s.getLastMatch().getY()
-        reg.s.find("Stores")
-        boty =  reg.s.getLastMatch().getY()
-        height = (boty-topy)+20
-        width = reg.s.getW()
-        SourcesRegion = Region(topx,topy, width, height)
-        SourcesRegion.setAutoWaitTimeout(20)
-        return SourcesRegion
-
-    def get_podcasts_region(self, reg):
-        if not reg.s.exists("Podcasts",3):
-            type(Key.ESC) #in case there's any dialog left overs blocking for some reason
-            reg.s.click("Music")
-            time.sleep(3)
-            reg.s.click("Podcasts")
-        else:
-            reg.s.click("Podcasts")
-        time.sleep(2)
-        topx =  (reg.s.getLastMatch().getX())-10
-        topy =  reg.s.getLastMatch().getY()
-        tmpr = Region(reg.s)
-        tmpr.setY(tmpr.y+200)
-        if tmpr.exists("Playlists"):
-            boty =  tmpr.getLastMatch().getY()
-            height = (boty-topy)+50
-        else:
-            height = reg.s.getH()
-        width = reg.s.getW()-10
-        PodcastsRegion = Region(topx,topy, width, height)
-        PodcastsRegion.setAutoWaitTimeout(20)
-        return PodcastsRegion
-        
-    def get_playlists_region(self, reg):
-        tmps = Region(reg.s)
-        tmps.setY(reg.s.getY()+75)
-        if tmps.exists("Playlists",3):
-            click(tmps.getLastMatch())
-        else:
-            tmps.click("Sources")
-            time.sleep(2)
-            tmps.click("Playlists")
-        PlaylistsRegion = Region(tmps.getLastMatch().left(180).right(300).below())
-        PlaylistsRegion.setAutoWaitTimeout(20)
-        return PlaylistsRegion     
-            
         
     def delete_site(self, reg, site):
         """Delete the video feed from the sidebar.
@@ -410,23 +320,6 @@ class MiroApp(object):
         time.sleep(3)
 
 
-    def click_podcast(self, reg, feed):
-        """Find the podcast in the sidebar within podcast region and click on it.
-        """
-        print "Clicking the podcast: %s" % feed
-        p = self.get_podcasts_region(reg)
-        p.click(feed)
-        return Region(p.getLastMatch()).getCenter()
-
-    def click_playlist(self, reg, playlist):
-        """Find the podcast in the sidebar within podcast region and click on it.
-        """
-        print "Clicking the playlist: %s" % playlist
-        p = self.get_playlists_region(reg)
-        time.sleep(3)
-        p.find(playlist)
-        click(p.getLastMatch())
-        return Region(p.getLastMatch()).getCenter()
 
     def add_watched_folder(self, reg, folder_path, show=True):
         """Add a feed to miro, click on it in the sidebar.
@@ -505,33 +398,6 @@ class MiroApp(object):
 
 
         
-        
-    def click_misc(reg):
-        if not reg.s.exists("Music",1):
-            reg.s.click("Videos")
-        reg.s.click("Music")
-        p = Region(reg.s.getLastMatch().below(200))
-        p.click("Misc")
-        
-
-    def set_podcast_autodownload(self, reg, setting="Off"):
-        """Set the feed autodownload setting using the button at the bottom of the mainview.
-
-        """
-        """Based on the position of the Playlists tab, click on the last podcast in the list.
-
-        This is useful if the title isn't displayed completely or you have other chars to don't work for text recognition.
-        """
-        
-        b = Region(reg.m.getX(),reg.m.getY()+500,reg.m.getW(), reg.m.getH())
-        b.highlight(2)
-        b.find("button_autodownload.png")
-        b1 = Region(b.getLastMatch().right(80))
-        b1.highlight(2)
-        for x in range(0,3):
-            if not b1.exists(setting,2):
-                   b.click("button_autodownload.png")
-                   time.sleep(2)
 
     def open_podcast_settings(self, reg):
         b = Region(reg.s.getX(),reg.m.getY()*2,reg.m.getW(), reg.m.getH())
@@ -559,11 +425,6 @@ class MiroApp(object):
         time.sleep(2)
         p1.click("button_done.png")
 
-    def click_source(self, reg, website):
-            p = self.get_sources_region(reg)
-            p.find(website)
-            click(p.getLastMatch())
-            
 
     def delete_feed(self, reg, feed):
         """Delete the video feed from the sidebar.
@@ -599,40 +460,6 @@ class MiroApp(object):
         self.remove_confirm(reg, "remove")
 
 
-    def tab_search(self, reg, title, confirm_present=False):
-        """enter text in the search box.
-
-        """
-        print "searching within tab"
-        time.sleep(3)
-        if reg.mtb.exists("tabsearch_clear.png",5):
-            print "found tabsearch_clear"
-            click(reg.mtb.getLastMatch())
-            click(reg.mtb.getLastMatch().left(10))
-        elif reg.mtb.exists("tabsearch_inactive.png",5):
-            print "found tabsearch_inactive"
-            reg.mtb.click("tabsearch_inactive.png")
-        else:
-            print "can not find the search box"
-        time.sleep(2)
-        print "Entering search text"
-        type(title.upper())
-        time.sleep(3)
-        if confirm_present != False:
-            self.toggle_normal(reg)
-            if reg.m.exists(title, 5):
-                present=True
-            elif reg.m.exists(Pattern("item-context-button.png")):
-                present=True
-            else:
-                print("Item %s not found in the tab" % title)
-            return present
-
-    def clear_search(self, reg):
-        if reg.mtb.exists("tabsearch_clear.png",5):
-            print "found tabsearch_clear"
-            click(reg.mtb.getLastMatch())
-        
 
 
     def expand_item_details(self, reg):
@@ -677,40 +504,6 @@ class MiroApp(object):
      
 
 
-    def search_tab_search(self, reg, term, engine=None):
-        """perform a search in the search tab.
-
-        Requires: search term (term), search engine(engine) and MainViewTopRegion (mtb)
-
-        """
-        print "starting a search tab search"
-        # Find the search box and type in the search text
-        
-        if reg.mtb.exists("tabsearch_clear.png",5): # this should always be found on gtk
-            print "found the broom"
-            click(reg.mtb.getLastMatch())
-            click(reg.mtb.getLastMatch().left(10))
-        elif reg.mtb.exists("tabsearch_inactive.png",5):
-            click(reg.mtb.getLastMatch())
-        type(term.upper())
-        # Use the search text to create a region for specifying the search engine
-        if engine != None:
-            l = reg.mtb.find(term.upper())
-            l1= Region(int(l.getX()-20), l.getY(), 8, 8,)
-            click(l1)
-            l2 = Region(int(l.getX()-15), l.getY(), 300, 500,)
-            
-            if engine == "YouTube":
-                l3 = Region(l2.find("YouTube User").above())
-                l3.click(engine)
-            else:
-                l2.click(engine)
-            type("\n") #enter the search 
-                
-        else:
-            type("\n")
-     
-
     def download_all_items(self, reg):
         print "downloading all the items"
         time.sleep(5)
@@ -729,40 +522,6 @@ class MiroApp(object):
 
 
       
-    def confirm_download_started(self, reg,title):
-        """Verifies file download started.
-
-        Handles and already download(ed / ing) messages
-        """
-        print "in function confirm dl started"
-        time.sleep(2)
-        mr = Region(reg.mtb.above(50).below())
-        if mr.exists("been downloaded",3) or \
-           mr.exists("message_already_downloaded.png",1):
-            downloaded = "downloaded"
-            print "item already downloaded"
-            type(Key.ESC)            
-        elif mr.exists("downloading now",3) or \
-             mr.exists("message_already_external_dl.png",1):
-            downloaded = "in_progress"
-            print "item downloading"
-            type(Key.ESC)
-        elif mr.exists("Error",3) or \
-             mr.exists(Pattern("badge_dl_error.png"),1):
-            downloaded = "failed"
-            type(Key.ESC)
-        else:
-            self.click_sidebar_tab(reg, "Downloading")
-            reg.mtb.click(Pattern("download-pause.png"))
-            if mr.exists(Pattern("badge_dl_error.png"),2):
-                downlaoded = "errors"
-            elif self.tab_search(reg,title,confirm_present=True) == True:
-                downloaded = "in_progress"
-            else:
-                    downloaded = "item not located"
-            reg.mtb.click(Pattern("download-resume.png"))
-        return downloaded
-
 
     def wait_download_complete(self, reg, title, torrent=False):
         """Wait for a download to complete before continuing test.
@@ -802,14 +561,6 @@ class MiroApp(object):
                 for x in mm:
                     click(x)    
                     
-    def wait_for_item_in_tab(self, reg, tab, item):
-        self.click_sidebar_tab(reg, tab)
-        self.tab_search(reg, item)
-        self.toggle_normal(reg)
-        for x in range(0,30):
-            if not reg.m.exists(item):
-                print ". waiting",x*5,"seconds for item to appear in tab:",tab
-                time.sleep(5)
         
     def wait_conversions_complete(self, reg, title, conv):
         """Waits for a conversion to complete.
@@ -898,158 +649,6 @@ class MiroApp(object):
             f.click("Create")
 
 
-    def edit_item_type(self, reg, new_type, old_type):
-        """Change the item's metadata type, assumes item is selected.
-
-        """
-        time.sleep(5)
-        self.shortcut('i')
-        time.sleep(2)
-        click("Rating")
-        f = Region(getLastMatch())
-        f.setW(200)
-        f.setH(100)
-        f.find("Type")
-        click(f.getLastMatch().right(50))
-        if old_type == "Video" and new_type == "Music":
-            type(Key.UP)
-        elif old_type == "Video" and new_type == "Misc":
-            type(Key.DOWN)
-        elif old_type == "Music" and new_type == "Video":
-            type(Key.UP)
-        else: 
-            mouseDown(Button.LEFT)
-            mouseMove(new_type)
-            mouseUp(Button.LEFT)
-        time.sleep(2)
-        click("button_ok.png")
-
-    def edit_item_rating(self, rating):
-        """Change the item's metadata type, assumes item is selected.
-
-        """
-        click("Rating")
-    #    f = Region(getLastMatch().nearby(100))
-        click(getLastMatch().right(50))
-    ##    if f.exists("None"):
-    ##        click(f.getLastMatch())
-        for x in range(0,int(rating)):
-            type(Key.DOWN)
-        type(Key.ENTER)
-        click("button_ok.png")
-
-
-    def edit_item_metadata(self, reg, meta_field, meta_value):
-        """Given the field and new metadata value, edit a selected item, or multiple items metadata.
-
-        """
-        metalist = ["name","artist","album","genre","track_num",
-                         "track_of","year","about","rating","type",
-                         "art","path","cancel","ok"]
-        time.sleep(2)
-        self.shortcut('i')
-        time.sleep(2)
-
-        for i in (i for i,x in enumerate(metalist) if x == meta_field.lower()):
-            rep = i
-
-        if meta_field == "rating":
-            self.edit_item_rating(rating=meta_value)
-        elif config.get_os_name() == "osx" and rep > 6: #stupid but the tab gets stuck on the about field
-            if meta_field == "art":
-                click("Click to")
-                type(meta_value)
-                type(Key.ENTER)
-            else:
-                click(meta_field)
-                click(getLastMatch().right(50))
-                type(meta_value)
-            click(Pattern("button_ok.png"))
-        else:    
-            for x in range(0,rep): #tab to the correct field
-                type(Key.TAB)
-                time.sleep(.5)
-            if meta_field == "art": #need a space bar to open the text entry field
-                type(" ")
-                type(meta_value)
-                type(Key.ENTER)
-                time.sleep(2)
-                click("button_ok.png")
-            else:
-                type(meta_value) #enter the new value
-                ok_but = len(metalist)
-                for x in range(rep+1,ok_but):
-                    type(Key.TAB)
-                    time.sleep(.5)
-                type(Key.ENTER) #Save the changes
-
-    def edit_item_video_metadata_bulk(self, reg, new_metadata_list):
-        """Given the field and new metadata value, edit a selected item, or mulitple items metadata.
-
-        """
-        metalist = ["show","episode_id","season_no","episode_no",
-                         "video_kind","cancel","ok"]
-        self.shortcut('i')
-        time.sleep(2)
-        find("Rating")
-        v = Region(getLastMatch().above(100).left(60))
-        v.click("Video")
-        
-        if exists("Show"):
-            top_tab = getLastMatch().right(200)
-            click(top_tab)
-            metar = Region(getLastMatch().below())
-            metar.setW(metar.getW()+300)
-        else:
-            print("Can not find show field")
-        for meta_field,meta_value,req_id in new_metadata_list:
-            print meta_field,meta_value
-            for i in (i for i,x in enumerate(metalist) if x == meta_field):
-                rep = i
-                print rep,meta_field
-            for x in range(0,rep): #tab to the correct field
-                type(Key.TAB)
-                time.sleep(.5)
-            if meta_field == "video_kind": #need a space bar to open the text entry field
-                type(" ")
-                metar.click(meta_value)
-            else:
-                type(meta_value) #enter the new value
-                #go back to the top field, Show
-            if req_id:
-                self.log_result(req_id,"value edited in dialog")
-            click(top_tab)
-        ok_but = len(metalist)
-        for x in range(1,ok_but):
-            type(Key.TAB)
-            time.sleep(.5)
-        type(Key.ENTER) #Save the changes
-       
-
-    def store_item_path(self, reg):
-        """Get the items file path from the edit item dialog via clipboard and return it.
-
-        """
-        time.sleep(2)
-        self.shortcut('i')
-        time.sleep(2)
-        if config.get_os_name == "osx":
-            reg.m.find("Path")
-            pr = Region(reg.m.getLastMatch()).right(500)
-            pr.setX(pr.getX()+15)
-            pr.setY(pr.getY()-10)
-            pr.setH(pr.getH()+20)
-            pr.highlight(5)
-            mypath = pr.text()
-            print mypath
-            filepath = mypath
-        else:
-            for x in range(0,11):
-                type(Key.TAB)
-            self.shortcut('c')
-            filepath = Env.getClipboard()
-            type(Key.ESC) #ESC to close the dialog
-        return filepath
             
         
     def verify_normalview_metadata(self, reg, metadata):
