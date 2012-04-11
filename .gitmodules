@@ -1,3 +1,0 @@
-[submodule "lettuce"]
-	path = tests.sikuli/lettuce
-	url = git@github.com:jdragojevic/lettuce.git
