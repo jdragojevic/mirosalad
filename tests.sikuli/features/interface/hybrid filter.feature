@@ -25,7 +25,6 @@ Examples:
     |Podcasts|
 
 Scenario Outline: Hybrid View Available on Hideable tabs
-    Given the "<tab>" is present
     When I am on the "<tab>" sidebar tab
     Then I see the "Hybrid Filter" button
 
@@ -36,7 +35,6 @@ Examples:
     |Watched Folders|
 
 Scenario Outline: Hybrid View NOT Available
-    Given the "<tab>" is present
     When I am on the "<tab>" sidebar tab
     Then I do not see the "Hybrid Filter" button
 

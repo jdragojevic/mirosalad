@@ -32,7 +32,7 @@ def set_podcast_preference(self, setting, value):
         world.mainview.set_podcast_autodownload(value)
     else:
         getattr(world.mainview, 'settings')
-        world.dialog.change_podcast_settings(setting, value)
+        world.dialog.set_podcast_settings(setting, value)
 
 @step('I can verify the video "([^"]*)" is playable')
 def verify_video_playback(self, title):

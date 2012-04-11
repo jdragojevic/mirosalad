@@ -32,7 +32,7 @@ def setup_basic_data(feature):
         # Add a feed that contains 1 of each item type (Music, Video, Misc) and set autodownload to All
         feed_path = os.path.join(os.getcwd(), 'features', 'terrain', 'TestData', 'feeds', "MixedCats.xml")
         world.sidebar.add_feed("file://"+feed_path, "MIXED CATS")
-        world.mainview.podcast_autodownload("All")
+        world.mainview.set_podcast_autodownload("All")
 
 @after.each_feature
 def cleanup(feature):

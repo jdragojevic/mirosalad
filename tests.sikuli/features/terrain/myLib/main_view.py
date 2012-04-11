@@ -11,9 +11,9 @@ class MainView(MiroApp):
                     'currently playing': "item_currently_playing.png",
                     'download': 'button_download.png'}
 
-    _VIEW_TOGGLES = {'normal': ["standard-view.png"],
-                     'list': ["list-view.png"],
-                     'hybrid': ["hybrid-view.png"] }
+    _FILTER_TOGGLES = {'two_filter': Pattern('2_filter_toggle.png'),
+                       'three_filter': Pattern('3_filter_toggle.png')
+                      }
     _CONVERSION_PROGRESS = "item-renderer-conversion-progress-left.png"
     _CLEAR_FINISHED_CONVERSIONS = "button_clear_finished.png"
     
@@ -26,6 +26,24 @@ class MainView(MiroApp):
                 
     _SEARCH = {'clear': 'tabsearch_clear.png',
                'inactive': 'tabsearch_inactive.png'}
+
+    def hybrid_filter(self):
+        self.m.find(self._FILTER_TOGGLES['three_filter'])
+        if action == 'click':
+            click(self.m.getLastMatch())
+
+    def list_filter(self):
+        for filter in self._FILTER_TOGGLES.iterkeys():
+            if self.m.exists(filter, 1):
+                break
+        click(self.m.getLastMatch().right(25)
+
+    def normal_filter(self):
+        for filter in self._FILTER_TOGGLES.iterkeys():
+            if self.m.exists(filter, 1):
+                break
+        click(self.m.getLastMatch().left(25)
+
          
     def settings(self, action):
         self.m.find(self._BUTTONS['Settings'])
