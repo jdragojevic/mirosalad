@@ -1,0 +1,3 @@
+[submodule "tests.sikuli/lettuce"]
+	path = tests.sikuli/lettuce
+	url = https://github.com/gabrielfalcao/lettuce.git

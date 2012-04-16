@@ -36,13 +36,13 @@ class MainView(MiroApp):
         for filter in self._FILTER_TOGGLES.iterkeys():
             if self.m.exists(filter, 1):
                 break
-        click(self.m.getLastMatch().right(25)
+        click(self.m.getLastMatch().right(25))
 
     def normal_filter(self):
         for filter in self._FILTER_TOGGLES.iterkeys():
             if self.m.exists(filter, 1):
                 break
-        click(self.m.getLastMatch().left(25)
+        click(self.m.getLastMatch().left(25))
 
          
     def settings(self, action):
